@@ -6,4 +6,4 @@ A brief description of your project.
 
 Instructions on how to set up and use your project.
 
-Changes now available to save to github.
+Changes now available to save to github. 
