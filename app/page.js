@@ -18,12 +18,14 @@ export default function Home() {
           <div className="icon">⚡</div>
           <h2>Next.js 15</h2>
           <p>Built with the latest Next.js App Router for optimal performance and modern React features.</p>
+          <a href="https://nextjs.org/" target="_blank" rel="noopener noreferrer" className="feature-link">Visit Next.js →</a>
         </div>
 
         <div className="feature-card">
           <div className="icon">🔧</div>
           <h2>E2B Code Interpreter</h2>
           <p>Execute code securely in isolated sandboxes with E2B's powerful code interpretation capabilities.</p>
+          <a href="https://e2b.dev/docs" target="_blank" rel="noopener noreferrer" className="feature-link">Visit E2B →</a>
         </div>
 
         <div className="feature-card">
