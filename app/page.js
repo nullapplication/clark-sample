@@ -11,6 +11,7 @@ export default function Home() {
           <div className="icon">🤖</div>
           <h2>Claude AI</h2>
           <p>Powered by Anthropic's Claude, providing intelligent code assistance and natural language understanding.</p>
+          <a href="https://claude.ai/" target="_blank" rel="noopener noreferrer" className="feature-link">Visit Claude →</a>
         </div>
 
         <div className="feature-card">
