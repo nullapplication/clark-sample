@@ -1,0 +1,26 @@
+name: accelerate-mx-admin
+
+services:
+   application:
+      container_name: admin-app-dev
+      restart: no
+      build:
+         context: .
+         dockerfile: Dockerfile
+      deploy:
+         resources:
+            limits:
+               cpus: '0.25'
+               memory: 512M
+            reservations:
+               cpus: '0.25'
+               memory: 512M
+      ports:
+         - '3000:3000'
+      env_file:
+         - .env
+      volumes:
+         - ~/.aws:/home/nextjs/.aws:ro
+      profiles:
+         - all
+         - build

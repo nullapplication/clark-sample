@@ -1,0 +1,11 @@
+.container {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+}
+
+.aircraft {
+   border: 1px solid #ccc;
+   border-radius: 15px;
+   padding: 10px;
+}

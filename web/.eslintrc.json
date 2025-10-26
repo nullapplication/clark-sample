@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:prisma/recommended"
+  ],
+  "plugins": ["prettier", "prisma"],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "warn",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "prisma/naming-convention": "error",
+    "prisma/consistent-type-definitions": "error"
+  }
+}

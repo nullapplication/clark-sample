@@ -1,0 +1,16 @@
+.main {
+   position: relative;
+   display: inline-block;
+}
+
+.main .img {
+   border-radius: 8px;
+}
+
+.header {
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+   justify-content: space-between;
+   align-items: center;
+}

@@ -1,0 +1,10 @@
+{
+  "name": "infra-sam",
+  "version": "1.0.0",
+  "description": "SAM deployment automation for AccelerateMX",
+  "scripts": {
+    "deploy:dev": "sam build --config-file samconfig-dev.toml && sam deploy --config-file samconfig-dev.toml",
+    "deploy:staging": "sam build --config-file samconfig-staging.toml --profile null-application-profile && sam deploy --config-file samconfig-staging.toml --profile null-application-profile"
+  },
+  "dependencies": {}
+}

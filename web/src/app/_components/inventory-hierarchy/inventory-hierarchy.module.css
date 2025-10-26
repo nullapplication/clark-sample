@@ -1,0 +1,25 @@
+.part {
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+}
+.title {
+   color: var(--primary-text-color);
+   padding-bottom: 8px;
+   display: block;
+}
+
+.partInfo {
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+   font-size: 0.875rem;
+}
+
+.partInfo > div {
+   width: 150px;
+}
+
+.label {
+   color: var(--subtle-color);
+}

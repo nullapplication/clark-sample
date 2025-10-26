@@ -1,0 +1,31 @@
+.main {
+   display: flex;
+   flex-direction: row;
+   gap: 0.5rem;
+   align-items: center;
+}
+
+input[type='search'].search {
+   width: 100%;
+   background-color: #2f3336;
+   border: none;
+   padding-right: 2.5rem;
+   box-sizing: border-box;
+}
+input[type='search'].search::placeholder {
+   color: #8a8e94;
+}
+
+.inputWrapper {
+   position: relative;
+   width: 100%;
+}
+
+.icon {
+   position: absolute;
+   right: 0.5rem;
+   top: 50%;
+   transform: translateY(-50%);
+   pointer-events: none; /* Prevent the icon from blocking input clicks */
+   color: #888;
+}

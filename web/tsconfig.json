@@ -1,0 +1,38 @@
+{
+   "compilerOptions": {
+      "target": "ES2017",
+      "lib": ["dom", "dom.iterable", "esnext"],
+      "allowJs": true,
+      "skipLibCheck": true,
+      "strict": false,
+      "noEmit": true,
+      "incremental": true,
+      "module": "esnext",
+      "esModuleInterop": true,
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "jsx": "preserve",
+      "plugins": [
+         {
+            "name": "next"
+         }
+      ],
+      "baseUrl": "src",
+      "paths": {
+         "@app/*": ["app/*"],
+         "@ui/*": ["app/_components/ui/*"],
+         "@utils/*": ["app/_utils/*"],
+         "@prisma-client": ["app/prisma-client.js"]
+      }
+   },
+   "include": [
+      "next-env.d.ts",
+      ".next/types/**/*.ts",
+      "**/*.ts",
+      "**/*.tsx",
+      "src/app/admin/aircraft/[tail_number]/page.jsx",
+      "src/app/admin/aircraft/actions.js"
+   ],
+   "exclude": ["node_modules"]
+}

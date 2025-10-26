@@ -1,0 +1,19 @@
+.table {
+   width: 100%;
+}
+.table td {
+   padding-left: 0px;
+   padding-right: 16px;
+   padding-top: 4px;
+   padding-bottom: 4px;
+}
+.table th {
+   color: var(--subtle-color);
+   text-align: left;
+}
+.table tbody tr {
+   cursor: pointer;
+}
+.table tbody tr:hover {
+   background-color: #222222;
+}

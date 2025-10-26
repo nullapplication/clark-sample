@@ -1,0 +1,12 @@
+version = 0.1
+
+[default.build.parameters]
+template_file = "template-staging.yaml"
+
+[default.deploy.parameters]
+stack_name = "accelerate-mx-app-staging"
+resolve_s3 = true
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND"
+image_repositories = []
+

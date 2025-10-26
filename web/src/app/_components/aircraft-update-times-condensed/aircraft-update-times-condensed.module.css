@@ -1,0 +1,18 @@
+.item {
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-start;
+   gap: 1rem;
+}
+.item .itemTitle {
+   min-width: 150px;
+}
+.item label {
+   display: block;
+}
+.usage {
+   display: inline-block;
+}
+.input {
+   width: 100px;
+}

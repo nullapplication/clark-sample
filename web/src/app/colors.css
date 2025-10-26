@@ -1,0 +1,21 @@
+:root {
+   --primary-text-color: #000;
+   --primary-background-color: #fff;
+   --hover-background-color: #f0f0f0;
+   --highlight-color: #3c80cd;
+   --subtle-color: #8a8e94;
+   --danger-color: red;
+}
+
+.dark-theme {
+   --primary-text-color: #fff;
+   --primary-background-color: #000;
+}
+
+.subtle {
+   color: var(--subtle-color);
+}
+
+.highlight {
+   color: var(--highlight-color);
+}

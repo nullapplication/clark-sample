@@ -1,0 +1,406 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  SAM Template for accelerate-mx-staging.
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 60
+    MemorySize: 512
+    Tags:
+      app: "acceleratemx"
+      env: "staging"
+
+Resources:
+  ###################################
+  # API Gateway
+  ###################################
+  StagingApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: accelerate-mx-staging-api-gw
+      StageName: staging
+      Domain:
+        DomainName: api-staging.acceleratemx.com
+        CertificateArn: "arn:aws:acm:us-east-1:202533529905:certificate/7c152ecf-af04-446b-864f-3a5ae94c5668"
+        EndpointConfiguration: REGIONAL
+      Cors:
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowOrigin: "'*'"
+      DefinitionBody:
+        swagger: 2.0
+        info:
+          title: Staging API
+        paths:
+          /{proxy+}:
+            x-amazon-apigateway-any-method:
+              produces:
+                - application/json
+              consumes:
+                - application/json
+              parameters:
+                - name: proxy
+                  in: path
+                  required: true
+                  type: string
+              x-amazon-apigateway-integration:
+                uri: !Sub "http://${AppLoadBalancer.DNSName}/api/{proxy}"
+                httpMethod: ANY
+                type: http_proxy
+                passthroughBehavior: when_no_match
+                requestParameters:
+                  integration.request.path.proxy: method.request.path.proxy
+      Tags:
+        app: acceleratemx
+        env: staging
+
+  ###################################
+  # ECR Repository for App
+  ###################################
+  AppEcrRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: accelerate-mx-app
+      Tags:
+        - Key: app
+          Value: acceleratemx
+        - Key: env
+          Value: staging
+
+  ###################################
+  # ECS Cluster for App
+  ###################################
+  AppEcsCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: accelerate-mx-staging-app-cluster
+      Tags:
+        - Key: app
+          Value: acceleratemx
+        - Key: env
+          Value: staging
+
+  ###################################
+  # ECS Task Definition for App
+  ###################################
+  AppEcsTask:
+    Type: AWS::ECS::TaskDefinition
+    DependsOn:
+      - AppListener
+      - AppListenerHTTPS
+    Properties:
+      Family: accelerate-mx-staging-app-task
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: "1024"
+      Memory: "2048"
+      NetworkMode: awsvpc
+      TaskRoleArn: !GetAtt AppEcsTaskRole.Arn
+      ExecutionRoleArn: !GetAtt AppEcsTaskExecutionRole.Arn
+      ContainerDefinitions:
+        - Name: app-container
+          Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/accelerate-mx-app:latest"
+          PortMappings:
+            - ContainerPort: 3000
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              mode: "non-blocking"
+              awslogs-multiline-pattern: "^(INFO|DEBUG|WARN|ERROR|CRITICAL)"
+              max-buffer-size: "25m"
+              awslogs-create-group: true
+              awslogs-group: /ecs/accelerate-mx-staging-app
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: "app"
+          Environment:
+            - Name: API_URL
+              Value: "https://api-staging.acceleratemx.com"
+            - Name: DEFAULT_OPENAI_MODEL
+              Value: "gpt-4o-mini"
+            - Name: DATABASE_URL
+              Value: "{{resolve:secretsmanager:/acceleratemx/staging/database-credentials:SecretString:DATABASE_URL}}"
+            - Name: OPENAI_API_KEY
+              Value: "{{resolve:secretsmanager:/acceleratemx/staging/openai-api-key:SecretString:OPENAI_API_KEY}}"
+          HealthCheck:
+            Command:
+              - "CMD-SHELL"
+              - "curl -f http://$HOSTNAME:3000 || exit 1"
+            Interval: 5
+            Retries: 2
+            StartPeriod: 10
+            Timeout: 3
+      Tags:
+        - Key: app
+          Value: acceleratemx
+        - Key: env
+          Value: staging
+
+  ###################################
+  # ECS Service for App
+  ###################################
+  AppEcsService:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: accelerate-mx-staging-app-service
+      Cluster: !Ref AppEcsCluster
+      TaskDefinition: !Ref AppEcsTask
+      LaunchType: FARGATE
+      DesiredCount: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          Subnets:
+            - subnet-0e3993828d4448c23
+            - subnet-0a2c9138d452c961e
+          SecurityGroups:
+            - sg-05520d211a37d20e0
+          AssignPublicIp: ENABLED
+      LoadBalancers:
+        - ContainerName: app-container
+          ContainerPort: 3000
+          TargetGroupArn: !Ref AppTargetGroup
+      Tags:
+        - Key: app
+          Value: acceleratemx
+        - Key: env
+          Value: staging
+
+  AppTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: accelerate-mx-staging-app-tg
+      VpcId: "vpc-0ef0479d7e6d4802e"
+      Port: 3000
+      Protocol: HTTP
+      TargetType: ip
+      Tags:
+        - Key: app
+          Value: acceleratemx
+        - Key: env
+          Value: staging
+
+  AppLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: accelerate-mx-staging-app-alb
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: "60"
+      SecurityGroups:
+        - sg-099d810c7e117b7f2
+      Subnets:
+        - subnet-0e3993828d4448c23
+        - subnet-0a2c9138d452c961e
+      Tags:
+        - Key: app
+          Value: acceleratemx
+        - Key: env
+          Value: staging
+
+  AppListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref AppLoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref AppTargetGroup
+
+  AppListenerHTTPS:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref AppLoadBalancer
+      Port: 443
+      Protocol: HTTPS
+      SslPolicy: ELBSecurityPolicy-2016-08
+      Certificates:
+        - CertificateArn: "arn:aws:acm:us-east-1:202533529905:certificate/7c152ecf-af04-446b-864f-3a5ae94c5668"
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref AppTargetGroup
+
+  AppEcsTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      Policies:
+        - PolicyName: SecretsManagerAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource: "*"
+      Tags:
+        - Key: app
+          Value: acceleratemx
+        - Key: env
+          Value: staging
+
+  AppEcsTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AppEcsTaskRolePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "secretsmanager:GetSecretValue"
+                  - "s3:*"
+                  - "logs:PutLogEvents"
+                  - "logs:DescribeLogStreams"
+                  - "logs:CreateLogStream"
+                  - "logs:CreateLogGroup"
+                  - "logs:*"
+                  - "ecr:ListTagsForResource"
+                  - "ecr:ListImages"
+                  - "ecr:GetRepositoryPolicy"
+                  - "ecr:GetLifecyclePolicyPreview"
+                  - "ecr:GetLifecyclePolicy"
+                  - "ecr:GetDownloadUrlForLayer"
+                  - "ecr:GetAuthorizationToken"
+                  - "ecr:DescribeRepositories"
+                  - "ecr:DescribeImages"
+                  - "ecr:DescribeImageScanFindings"
+                  - "ecr:BatchGetImage"
+                  - "ecr:BatchCheckLayerAvailability"
+                  - "cognito-idp:ListUsers"
+                  - "cognito-idp:AdminUpdateUserAttributes"
+                  - "cognito-idp:AdminSetUserPassword"
+                  - "cognito-idp:AdminRemoveUserFromGroup"
+                  - "cognito-idp:AdminListGroupsForUser"
+                  - "cognito-idp:AdminGetUser"
+                  - "cognito-idp:AdminEnableUser"
+                  - "cognito-idp:AdminDisableUser"
+                  - "cognito-idp:AdminDeleteUser"
+                  - "cognito-idp:AdminCreateUser"
+                  - "cognito-idp:AdminAddUserToGroup"
+                  - "lambda:InvokeFunctionUrl"
+                  - "lambda:InvokeFunction"
+                Resource: "*"
+      Tags:
+        - Key: app
+          Value: acceleratemx
+        - Key: env
+          Value: staging
+
+  AlbWebACL:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      Name: accelerate-mx-staging-app-web-acl
+      Scope: REGIONAL
+      DefaultAction:
+        Allow: {}
+      Rules:
+        - Name: AWSManagedRulesAmazonIpReputationList
+          Priority: 0
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesAmazonIpReputationList
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: StagingAmazonIpReputationList
+
+        - Name: AWSManagedRulesCommonRuleSet
+          Priority: 1
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesCommonRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: StagingCommonRuleSet
+
+        - Name: AWSManagedRulesKnownBadInputsRuleSet
+          Priority: 2
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesKnownBadInputsRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: StagingKnownBadInputsRuleSet
+
+        - Name: AdminIPAllowRule
+          Priority: 3
+          Action:
+            Allow: {}
+          Statement:
+            IPSetReferenceStatement:
+              Arn: arn:aws:wafv2:us-east-1:202533529905:regional/ipset/AccelerateAdminIPs/b2dcacd7-5bf8-43a1-a7f4-56ff70d462e0
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: StagingAdminIPAllowRule
+
+        - Name: AdminBlockRule
+          Priority: 4
+          Action:
+            Block: {}
+          Statement:
+            ByteMatchStatement:
+              FieldToMatch:
+                UriPath: {}
+              PositionalConstraint: STARTS_WITH
+              SearchString: "/admin"
+              TextTransformations:
+                - Priority: 0
+                  Type: NONE
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: StagingAdminBlockRule
+
+      VisibilityConfig:
+        SampledRequestsEnabled: true
+        CloudWatchMetricsEnabled: true
+        MetricName: accelerate-mx-staging-web-acl
+
+  AlbWebACLAssociation:
+    Type: AWS::WAFv2::WebACLAssociation
+    Properties:
+      ResourceArn: !Ref AppLoadBalancer
+      WebACLArn: !GetAtt AlbWebACL.Arn
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway Base URL"
+    Value: "https://api-staging.acceleratemx.com/"
+    Export:
+      Name: StagingApiUrl
+  AppUrl:
+    Description: "App UI URL"
+    Value: "https://app-staging.acceleratemx.com/"
+    Export:
+      Name: StagingAppUrl

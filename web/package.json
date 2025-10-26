@@ -1,0 +1,60 @@
+{
+   "name": "acceleratemx-admin",
+   "version": "0.1.0",
+   "private": true,
+   "scripts": {
+      "init": "npm i && npm run db:run-migrations && npm run db:update-local-models && npm run db:seed && npm run dev",
+      "build": "next build",
+      "dev": "next dev --turbopack",
+      "start": "next dev --turbopack",
+      "lint": "next lint",
+      "db:run-migrations": "prisma migrate deploy",
+      "db:create-migration": "prisma migrate dev",
+      "db:update-local-models": "prisma generate",
+      "db:init": "docker compose --profile pg up -d",
+      "db:seed": "prisma db seed"
+   },
+   "prisma": {
+      "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+   },
+   "dependencies": {
+      "@emotion/styled": "^11.14.0",
+      "@hookform/resolvers": "^5.0.1",
+      "@mui/icons-material": "^6.4.5",
+      "@mui/material": "^6.4.3",
+      "@mui/x-data-grid": "^7.25.0",
+      "@mui/x-date-pickers": "^8.2.0",
+      "@prisma/client": "^6.3.0",
+      "adm-zip": "^0.5.16",
+      "csv-parser": "^3.2.0",
+      "dayjs": "^1.11.13",
+      "framer-motion": "^12.4.2",
+      "lodash": "^4.17.21",
+      "next": "^15.1.7",
+      "openai": "^4.85.2",
+      "prisma": "^6.3.0",
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0",
+      "react-hook-form": "^7.55.0",
+      "react-markdown": "^9.0.3",
+      "save-dev": "^0.0.1-security",
+      "swr": "^2.3.3",
+      "zod": "^3.24.2",
+      "zustand": "^5.0.3"
+   },
+   "devDependencies": {
+      "@eslint/eslintrc": "^3",
+      "@next/eslint-plugin-next": "^15.1.7",
+      "@types/node": "^20.14.0",
+      "@types/react": "^19.0.0",
+      "@types/react-dom": "^19.0.0",
+      "eslint": "^9.0.0",
+      "eslint-config-next": "^15.1.7",
+      "eslint-config-prettier": "^10.0.1",
+      "eslint-plugin-prettier": "^5.2.3",
+      "eslint-plugin-prisma": "^1.0.1",
+      "prettier": "^3.5.3",
+      "ts-node": "^10.9.2",
+      "typescript": "^5.4.5"
+   }
+}

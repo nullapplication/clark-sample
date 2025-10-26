@@ -1,0 +1,30 @@
+.main {
+   margin-bottom: 8px;
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-start;
+   gap: 8px;
+   width: 100%;
+   overflow: hidden;
+   flex-wrap: wrap;
+   height: 40px;
+}
+
+.day {
+   width: 70px;
+   color: var(--subtle-color);
+   cursor: pointer;
+}
+.day:hover {
+   color: var(--primary-text-color);
+}
+
+.monthDay {
+   font-size: 0.75rem;
+   display: block;
+}
+
+.weekDay {
+   font-size: 1rem;
+   display: block;
+}

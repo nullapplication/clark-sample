@@ -1,0 +1,46 @@
+.main {
+   width: fit-content;
+   display: flex;
+   flex-direction: column;
+   gap: 0.5rem;
+}
+
+.badgeContainer {
+   display: flex;
+   flex-direction: row;
+   gap: 0.5rem;
+   align-items: center;
+}
+
+.badge {
+   display: inline-block;
+   background-color: grey;
+   border-radius: 50%;
+   width: 10px;
+   height: 10px;
+}
+
+.active .badge {
+   background-color: #00ad1d;
+}
+
+.inactive .badge {
+   background-color: #b22020;
+}
+
+.dueSoon .badge {
+   background-color: #b28620;
+}
+
+.reason {
+   font-size: 0.85rem;
+   color: var(--subtle-color);
+}
+
+.inactive .reason {
+   color: #b22020;
+}
+
+.dueSoon .reason {
+   color: #b28620;
+}

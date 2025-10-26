@@ -1,0 +1,26 @@
+button {
+   border: none;
+   background-color: transparent;
+   color: var(--primary-text-color);
+   cursor: pointer;
+   font-size: 1rem;
+   padding: 0px;
+}
+
+.button {
+   padding: 8px 16px;
+   border: 1px solid #3c80cd;
+   color: #3c80cd;
+   background-color: #3c80cd26;
+   border-radius: 8px;
+   width: fit-content;
+}
+
+.button:hover {
+   background-color: #3c80cd4a;
+}
+
+.link {
+   text-decoration: underline;
+   text-align: start;
+}

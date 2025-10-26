@@ -1,0 +1,30 @@
+.main {
+   border: 1px solid #b28620;
+   color: #b28620;
+   border-radius: 8px;
+   text-align: center;
+   background-color: #2d2208;
+   padding-top: 4px;
+   padding-bottom: 4px;
+   padding-left: 8px;
+   padding-right: 8px;
+   width: 80px;
+}
+
+.low {
+   border-color: #cfcf18;
+   color: #cfcf18;
+   background-color: #343406;
+}
+
+.high {
+   border-color: #b22020;
+   color: #b22020;
+   background-color: #2d0808;
+}
+
+.critical {
+   border-color: #cc43d2;
+   color: #cc43d2;
+   background-color: #331135;
+}

@@ -1,0 +1,138 @@
+.form-container {
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+}
+
+.form-column {
+   display: flex;
+   flex-direction: column;
+   gap: 1rem;
+}
+
+.form-row {
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+   justify-content: space-evenly;
+}
+
+.form-row > * {
+   flex: 1;
+}
+
+.form-row:has(.checkbox) {
+   justify-content: flex-start;
+}
+.form-row .checkbox {
+   flex: none;
+}
+.form-row > .checkbox > input {
+   margin-right: 8px;
+}
+
+form .form-row label,
+form .form-row .label {
+   min-width: 125px;
+   margin-top: 9px;
+}
+
+.form-actions {
+   text-align: end;
+}
+
+.search-form {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   justify-content: flex-start;
+   align-items: center;
+   gap: 1rem;
+   margin-bottom: 8px;
+}
+
+form label {
+   /* font-size: 0.875rem; */
+}
+
+input[type='text'],
+input[type='number'],
+input[type='email'],
+input[type='password'],
+input[type='date'],
+input[type='search'],
+input[type='tel'],
+textarea,
+select {
+   padding: 8px 16px;
+   border: 1px solid #868686;
+   border-radius: 4px;
+   font-family: inherit;
+   font-size: 0.875rem;
+   background-color: var(--primary-background-color);
+   color: var(--primary-text-color);
+}
+input[type='number'] {
+   padding: 8px 4px 8px 16px;
+}
+
+input::placeholder,
+textarea::placeholder,
+div.placeholder {
+   color: #aeaeae;
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+   border-color: var(--highlight-color);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+   border-color: var(--primary-text-color);
+   border: 1px solid;
+}
+
+input:disabled,
+input:disabled + .MuiSvgIcon-root,
+textarea:disabled {
+   border-color: #e3e3e3;
+   background: #fff;
+   color: var(--mui-palette-info-dark);
+}
+
+::-webkit-search-cancel-button {
+   -webkit-appearance: none;
+}
+
+label {
+   color: var(--subtle-color);
+}
+label.checkbox {
+   display: flex;
+   cursor: pointer;
+}
+label.checkbox .MuiCheckbox-root {
+   top: -3px;
+   padding: 0;
+}
+
+input.full-width,
+textarea.full-width,
+select.full-width {
+   width: 100%;
+}
+
+.MuiAutocomplete-root {
+   border-radius: 4px;
+}
+.MuiAutocomplete-root .MuiOutlinedInput-root {
+   padding: 0px !important;
+}
+
+.MuiPickersTextField-root {
+   border: 1px solid #868686 !important;
+   border-radius: 4px;
+}

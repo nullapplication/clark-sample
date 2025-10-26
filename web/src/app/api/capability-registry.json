@@ -1,0 +1,754 @@
+{
+   "apis": [
+      {
+         "name": "Get All/My Aircraft",
+         "method": "GET",
+         "endpoint": "/aircraft",
+         "description": "Retrieves all aircraft that I have access to. Example questions: What aircraft do I have access to? What aircraft are in my fleet?",
+         "parameters": {
+            "page": {
+               "type": "integer",
+               "required": false,
+               "description": "The page number to retrieve."
+            },
+            "limit": {
+               "type": "integer",
+               "required": false,
+               "description": "The number of items to retrieve per page."
+            },
+            "sortBy": {
+               "type": "string",
+               "required": false,
+               "description": "The field to sort the results by."
+            },
+            "sortOrder": {
+               "type": "string",
+               "required": false,
+               "description": "The direction of the sort (asc or desc)."
+            },
+            "status": {
+               "type": "string",
+               "required": false,
+               "description": "Filter by aircraft status."
+            },
+            "regulation_authority": {
+               "type": "string",
+               "required": false,
+               "description": "Filter by regulation authority (e.g., FAA, EASA)."
+            }
+         },
+         "response": {
+            "code": "list_aircraft",
+            "description": "A list of aircraft."
+         }
+      },
+      {
+         "name": "Get Aircraft by tail number",
+         "method": "GET",
+         "endpoint": "/aircraft/:tail_number",
+         "description": "Retrieves details of a specific aircraft by its tail number.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft.  Examples of this may include: N12345, N1KE, G-GALX"
+            }
+         },
+         "response": {
+            "code": "single_aircraft",
+            "description": "A single aircraft."
+         }
+      },
+      {
+         "name": "Get aircraft utilization/times history",
+         "method": "GET",
+         "endpoint": "/aircraft/:tail_number/utilization",
+         "description": "Retrieves the utilization history of a specific aircraft, including flight hours, engine cycles, and landings.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft.  Examples of this may include: N12345, N1KE, G-GALX"
+            }
+         },
+         "response": {
+            "code": "list_aircraft_utilization",
+            "description": "A list of aircraft utilizations/times."
+         }
+      },
+      {
+         "name": "Get upcoming maintenance for a specific aircraft",
+         "method": "GET",
+         "endpoint": "/aircraft/:tail_number/scheduled-maintenance",
+         "description": "Retrieves the scheduled maintenance tasks for a specific aircraft, with pagination and sorting options.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft.  Examples of this may include: N12345, N1KE, G-GALX"
+            },
+            "page": {
+               "type": "integer",
+               "required": false,
+               "description": "The page number to retrieve."
+            },
+            "limit": {
+               "type": "integer",
+               "required": false,
+               "description": "The number of items to retrieve per page."
+            },
+            "sortBy": {
+               "type": "string",
+               "required": false,
+               "description": "The field to sort the results by."
+            },
+            "sortOrder": {
+               "type": "string",
+               "required": false,
+               "description": "The direction of the sort (asc or desc)."
+            }
+         },
+         "response": {
+            "code": "list_maintenance_item",
+            "description": "A list of scheduled maintenance."
+         }
+      },
+      {
+         "name": "Get maintenance requests for an aircraft",
+         "method": "GET",
+         "endpoint": "/aircraft/:tail_number/maintenance-requests",
+         "description": "Retrieves all maintenance requests associated with a specific aircraft.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft.  Examples of this may include: N12345, N1KE, G-GALX"
+            }
+         },
+         "response": {
+            "code": "list_maintenance_request",
+            "description": "A list of maintenance requests."
+         }
+      },
+      {
+         "name": "Get the maintenance due for a specific aircraft",
+         "method": "GET",
+         "endpoint": "/aircraft/:tail_number/due-list",
+         "description": "Retrieves a list of maintenance tasks and when they are due for a specific aircraft by tail number.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft."
+            }
+         },
+         "response": {
+            "code": "list_maintenance_item",
+            "description": "A list of maintenance items and when they are due."
+         }
+      },
+      {
+         "name": "Check aircraft airworthiness",
+         "method": "GET",
+         "endpoint": "/aircraft/:tail_number/airworthiness",
+         "description": "Determines whether an aircraft is airworthy based on overdue maintenance.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft."
+            }
+         },
+         "response": {
+            "code": "aircraft_airworthiness",
+            "description": "Airworthiness status of the aircraft."
+         }
+      },
+      {
+         "name": "Get inventory or equipment installed on aircraft",
+         "method": "GET",
+         "endpoint": "/aircraft/:tail_number/inventory",
+         "description": "Retrieve the inventory or equipment installed on a specific aircraft.",
+         "parameters": {
+            "page": {
+               "type": "integer",
+               "required": false,
+               "description": "The page number to retrieve."
+            },
+            "limit": {
+               "type": "integer",
+               "required": false,
+               "description": "The number of items to retrieve per page."
+            },
+            "sortBy": {
+               "type": "string",
+               "required": false,
+               "description": "The field to sort the results by."
+            },
+            "sortOrder": {
+               "type": "string",
+               "required": false,
+               "description": "The direction of the sort (asc or desc)."
+            }
+         },
+         "response": {
+            "code": "list_physical_inventory_item",
+            "description": "A list of inventory or equipment."
+         }
+      },
+      {
+         "name": "Get work history",
+         "method": "GET",
+         "endpoint": "/aircraft/:tail_number/work-history",
+         "description": "Retrieves the maintenance work history for a specific aircraft.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft."
+            }
+         },
+         "response": {
+            "code": "list_work_performed",
+            "description": "A list of work performed entries."
+         }
+      },
+      {
+         "name": "Update aircraft usage and times",
+         "method": "POST",
+         "endpoint": "/aircraft/:tail_number/update-usage",
+         "description": "Updates the aircraft usage metrics including flight hours, engine cycles, and landings. This endpoint allows tracking usage for both the aircraft and its components. Example questions: How do I update flight hours for N12345? I need to log new times for G-GALX.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft."
+            },
+            "flight_date": {
+               "type": "date",
+               "required": true,
+               "description": "Flight date to log for the aircraft's usage (format: YYYY-MM-DD)."
+            },
+            "usage_metrics": {
+               "type": "array",
+               "required": true,
+               "description": "Array of usage metrics to record for the aircraft and its components. Each metric includes inventory_id, metric_type, value, and optional penalties."
+            }
+         },
+         "response": {
+            "code": "aircraft_usage_updated",
+            "description": "Confirmation of updated aircraft usage with details of updated inventory items and created metrics."
+         }
+      },
+      {
+         "name": "Record work performed",
+         "method": "POST",
+         "endpoint": "/aircraft/:tail_number/perform-work",
+         "description": "Records maintenance work performed on an aircraft.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft."
+            },
+            "scheduled_maintenance_id": {
+               "type": "string",
+               "required": false,
+               "description": "The ID of the scheduled maintenance associated with the work."
+            },
+            "work_description": {
+               "type": "string",
+               "required": true,
+               "description": "Description of the maintenance work performed."
+            },
+            "performed_by": {
+               "type": "string",
+               "required": true,
+               "description": "The name of the individual or team performing the work."
+            },
+            "flight_hours_at_service": {
+               "type": "integer",
+               "required": false,
+               "description": "Flight hours of the aircraft at the time of service."
+            },
+            "engine_cycles_at_service": {
+               "type": "integer",
+               "required": false,
+               "description": "Engine cycles of the aircraft at the time of service."
+            },
+            "landing_at_service": {
+               "type": "integer",
+               "required": false,
+               "description": "Number of landings recorded at the time of service."
+            }
+         },
+         "response": {
+            "code": "form_add_work_performed",
+            "description": "Form to add work performed entries."
+         }
+      },
+      {
+         "name": "Get bases of operation",
+         "method": "GET",
+         "endpoint": "/bases",
+         "description": "Retrieves the active bases of operation.",
+         "response": {
+            "code": "list_base",
+            "description": "A list of bases of operation."
+         }
+      },
+      {
+         "name": "Get maintenance due for all aircraft or when no aircraft is specified",
+         "method": "GET",
+         "endpoint": "/fleet/due-list",
+         "description": "Retrieves a list of overdue maintenance tasks when no specific aircraft is specified.",
+         "response": {
+            "code": "list_maintenance_item",
+            "description": "A list of maintenance items and when they are due."
+         }
+      },
+      {
+         "name": "Get upcoming maintenance for all aircraft or when no aircraft is specified",
+         "method": "GET",
+         "endpoint": "/fleet/scheduled-maintenance",
+         "description": "Retrieves a list of scheduled maintenance tasks across all aircraft user has access to. Used when a specific tail number is not specified.",
+         "parameters": {
+            "page": {
+               "type": "integer",
+               "required": false,
+               "description": "The page number to retrieve."
+            },
+            "limit": {
+               "type": "integer",
+               "required": false,
+               "description": "The number of items to retrieve per page."
+            },
+            "sortBy": {
+               "type": "string",
+               "required": false,
+               "description": "The field to sort the results by."
+            },
+            "sortOrder": {
+               "type": "string",
+               "required": false,
+               "description": "The direction of the sort (asc or desc)."
+            }
+         },
+         "response": {
+            "code": "list_maintenance_item",
+            "description": "A list of maintenance items."
+         }
+      },
+      {
+         "name": "Get upcoming unscheduled maintenance (discrepancies, squawks) for all aircraft or when no aircraft is specified",
+         "method": "GET",
+         "endpoint": "/fleet/unscheduled-maintenance",
+         "description": "Retrieves a list of unscheduled maintenance tasks (discrepancies, squawks) across all aircraft user has access to. Used when a specific tail number is not specified.",
+         "parameters": {
+            "page": {
+               "type": "integer",
+               "required": false,
+               "description": "The page number to retrieve."
+            },
+            "limit": {
+               "type": "integer",
+               "required": false,
+               "description": "The number of items to retrieve per page."
+            },
+            "sortBy": {
+               "type": "string",
+               "required": false,
+               "description": "The field to sort the results by."
+            },
+            "sortOrder": {
+               "type": "string",
+               "required": false,
+               "description": "The direction of the sort (asc or desc)."
+            }
+         },
+         "response": {
+            "code": "list_unscheduled_maintenance_item",
+            "description": "A list of maintenance items."
+         }
+      },
+      {
+         "name": "Get product catalog to purchase from",
+         "method": "GET",
+         "endpoint": "/purchasing/products",
+         "description": "Retrieves a paginated list of products available for purchase, filtered by customer ID.",
+         "parameters": {
+            "page": {
+               "type": "integer",
+               "required": false,
+               "description": "The page number to retrieve. Defaults to 1."
+            },
+            "limit": {
+               "type": "integer",
+               "required": false,
+               "description": "The number of items to retrieve per page. Defaults to 10."
+            },
+            "sortBy": {
+               "type": "string",
+               "required": false,
+               "description": "The field to sort the results by. Defaults to 'part_number'."
+            },
+            "sortOrder": {
+               "type": "string",
+               "required": false,
+               "description": "The direction of the sort ('asc' or 'desc'). Defaults to 'desc'."
+            }
+         },
+         "response": {
+            "code": "list_product",
+            "description": "A list of products to purchase."
+         }
+      },
+      {
+         "name": "Get list of purchase orders",
+         "method": "GET",
+         "endpoint": "/purchasing/purchase-orders",
+         "description": "Retrieves a paginated list of purchase orders associated with the customer.",
+         "parameters": {
+            "page": {
+               "type": "integer",
+               "required": false,
+               "description": "The page number to retrieve. Defaults to 1."
+            },
+            "limit": {
+               "type": "integer",
+               "required": false,
+               "description": "The number of items to retrieve per page. Defaults to 10."
+            },
+            "sortBy": {
+               "type": "string",
+               "required": false,
+               "description": "The field to sort the results by. Defaults to 'part_number'."
+            },
+            "sortOrder": {
+               "type": "string",
+               "required": false,
+               "description": "The direction of the sort ('asc' or 'desc'). Defaults to 'desc'."
+            }
+         },
+         "response": {
+            "code": "list_purchase_order",
+            "description": "A list of purchase orders."
+         }
+      },
+      {
+         "name": "Get purchase order detail",
+         "method": "GET",
+         "endpoint": "/purchasing/purchase-orders/:order_number",
+         "description": "Retrieves the details of a specific purchase order, including line items, supplier information, and base of operation.",
+         "parameters": {
+            "order_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique order number of the purchase order to retrieve."
+            }
+         },
+         "response": {
+            "code": "single_purchase_order",
+            "description": "A single purchase order with line items."
+         }
+      },
+      {
+         "name": "Get list of suppliers",
+         "method": "GET",
+         "endpoint": "/purchasing/suppliers",
+         "description": "Retrieves a paginated list of suppliers associated with the customer.",
+         "parameters": {
+            "page": {
+               "type": "integer",
+               "required": false,
+               "description": "The page number to retrieve. Defaults to 1."
+            },
+            "limit": {
+               "type": "integer",
+               "required": false,
+               "description": "The number of items to retrieve per page. Defaults to 10."
+            },
+            "sortBy": {
+               "type": "string",
+               "required": false,
+               "description": "The field to sort the results by. Defaults to 'name'."
+            },
+            "sortOrder": {
+               "type": "string",
+               "required": false,
+               "description": "The direction of the sort ('asc' or 'desc'). Defaults to 'desc'."
+            }
+         },
+         "response": {
+            "code": "list_supplier",
+            "description": "A list of suppliers."
+         }
+      },
+      {
+         "name": "Get list of inventory/part locations",
+         "method": "GET",
+         "endpoint": "/inventory/locations",
+         "description": "Retrieves a paginated list of inventory locations associated with the customer.",
+         "parameters": {
+            "page": {
+               "type": "integer",
+               "required": false,
+               "description": "The page number to retrieve. Defaults to 1."
+            },
+            "limit": {
+               "type": "integer",
+               "required": false,
+               "description": "The number of items to retrieve per page. Defaults to 10."
+            },
+            "sortBy": {
+               "type": "string",
+               "required": false,
+               "description": "The field to sort the results by. Defaults to 'name'."
+            },
+            "sortOrder": {
+               "type": "string",
+               "required": false,
+               "description": "The direction of the sort ('asc' or 'desc'). Defaults to 'desc'."
+            }
+         },
+         "response": {
+            "code": "list_inventory_location",
+            "description": "A list of inventory/part locations."
+         }
+      },
+      {
+         "name": "Get inventory location/part and stock levels",
+         "method": "GET",
+         "endpoint": "/inventory/locations/:code",
+         "description": "Retrieves a paginated list of inventory/part location and stock levels associated with the location.",
+         "parameters": {
+            "code": {
+               "type": "string",
+               "required": true,
+               "description": "The barcode of the inventory location to retrieve."
+            },
+            "page": {
+               "type": "integer",
+               "required": false,
+               "description": "The page number to retrieve. Defaults to 1."
+            },
+            "limit": {
+               "type": "integer",
+               "required": false,
+               "description": "The number of items to retrieve per page. Defaults to 10."
+            },
+            "sortBy": {
+               "type": "string",
+               "required": false,
+               "description": "The field to sort the results by. Defaults to 'name'."
+            },
+            "sortOrder": {
+               "type": "string",
+               "required": false,
+               "description": "The direction of the sort ('asc' or 'desc'). Defaults to 'desc'."
+            }
+         },
+         "response": {
+            "code": "single_inventory_location",
+            "description": "A list of inventory/part locations and inventory stock."
+         }
+      },
+      {
+         "name": "Report Aircraft Discrepancy (Unscheduled Maintenance/Squawk)",
+         "method": "POST",
+         "endpoint": "/aircraft/:tail_number/unscheduled-maintenance",
+         "description": "Reports a new aircraft discrepancy, unscheduled maintenance issue, or squawk for an aircraft by tail number.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft. Examples of this may include: N12345, N1KE, G-GALX"
+            },
+            "title": {
+               "type": "string",
+               "required": true,
+               "description": "Short title of the issue."
+            },
+            "description": {
+               "type": "string",
+               "required": true,
+               "description": "Detailed description of the issue."
+            },
+            "reported_by": {
+               "type": "string",
+               "required": true,
+               "description": "ID of the person reporting the issue."
+            },
+            "reported_date": {
+               "type": "string",
+               "required": true,
+               "description": "Date and time the issue was reported."
+            },
+            "reported_location": {
+               "type": "string",
+               "required": false,
+               "description": "Location where the issue was reported."
+            },
+            "ata_code": {
+               "type": "string",
+               "required": false,
+               "description": "ATA Chapter code for categorization."
+            },
+            "severity": {
+               "type": "string",
+               "required": true,
+               "description": "Severity of the issue (LOW, MODERATE, HIGH, GROUNDED)."
+            },
+            "safety_impact": {
+               "type": "boolean",
+               "required": false,
+               "description": "Indicates if the issue impacts safety."
+            },
+            "repeat_issue": {
+               "type": "boolean",
+               "required": false,
+               "description": "Indicates if the issue has been reported before."
+            },
+            "flight_phase": {
+               "type": "string",
+               "required": false,
+               "description": "Phase of flight when the issue occurred (PREFLIGHT, TAXI, TAKEOFF, CRUISE, LANDING)."
+            },
+            "aircraft_time": {
+               "type": "number",
+               "required": false,
+               "description": "Aircraft total hours at the time of reporting."
+            },
+            "engine_cycles": {
+               "type": "integer",
+               "required": false,
+               "description": "Engine cycles at the time of reporting."
+            },
+            "landings": {
+               "type": "integer",
+               "required": false,
+               "description": "Number of landings at the time of reporting."
+            }
+         },
+         "response": {
+            "code": "form_report_unscheduled_maintenance",
+            "description": "The newly created unscheduled maintenance record."
+         }
+      },
+      {
+         "name": "Get Open Aircraft Discrepancies (Unscheduled Maintenance/Squawks)",
+         "method": "GET",
+         "endpoint": "/aircraft/:tail_number/unscheduled-maintenance/open",
+         "description": "Retrieves all open discrepancies, unscheduled maintenance issues, or squawks for a specific aircraft by tail number.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft. Examples of this may include: N12345, N1KE, G-GALX"
+            }
+         },
+         "response": {
+            "code": "list_unscheduled_maintenance_item",
+            "description": "A list of open discrepancies or unscheduled maintenance records."
+         }
+      },
+      {
+         "name": "Get Deferred Aircraft Discrepancies (MEL/CDL Deferrals)",
+         "method": "GET",
+         "endpoint": "/aircraft/:tail_number/unscheduled-maintenance/deferred",
+         "description": "Retrieves all deferred discrepancies, MEL/CDL deferrals, or postponed maintenance issues for an aircraft by tail number.",
+         "parameters": {
+            "tail_number": {
+               "type": "string",
+               "required": true,
+               "description": "The unique tail number of the aircraft. Examples of this may include: N12345, N1KE, G-GALX"
+            }
+         },
+         "response": {
+            "code": "list_mel_cdl_deferral",
+            "description": "A list of deferred discrepancies or maintenance deferrals."
+         }
+      },
+      {
+         "name": "Assign Aircraft Discrepancy (Unscheduled Maintenance/Squawk)",
+         "method": "POST",
+         "endpoint": "/aircraft/:tail_number/unscheduled-maintenance/:code/assign",
+         "description": "Assigns an aircraft discrepancy, unscheduled maintenance issue, or squawk to a maintenance technician or team for resolution.",
+         "parameters": {
+            "id": {
+               "type": "string",
+               "required": true,
+               "description": "The ID of the discrepancy or unscheduled maintenance issue to assign."
+            },
+            "assigned_to": {
+               "type": "string",
+               "required": true,
+               "description": "The name of the maintenance technician or team assigned to resolve the issue."
+            }
+         },
+         "response": {
+            "code": "form_assign_unscheduled_maintenance",
+            "description": "The updated discrepancy or maintenance record with assigned details."
+         }
+      },
+      {
+         "name": "Defer Aircraft Discrepancy (MEL/CDL Deferral)",
+         "method": "POST",
+         "endpoint": "/aircraft/:tail_number/unscheduled-maintenance/:code/defer",
+         "description": "Defers an aircraft discrepancy under Minimum Equipment List (MEL) or Configuration Deviation List (CDL) guidelines.",
+         "parameters": {
+            "id": {
+               "type": "string",
+               "required": true,
+               "description": "The ID of the maintenance issue or discrepancy to defer."
+            },
+            "mel_reference_number": {
+               "type": "string",
+               "required": true,
+               "description": "The reference number for the MEL authorization."
+            },
+            "deferral_reason": {
+               "type": "string",
+               "required": true,
+               "description": "Justification for deferring the discrepancy."
+            },
+            "deferral_approved_by": {
+               "type": "string",
+               "required": true,
+               "description": "The name of the authorized person approving the deferral."
+            },
+            "mel_expiration_date": {
+               "type": "string",
+               "required": true,
+               "description": "The expiration date of the MEL deferral."
+            }
+         },
+         "response": {
+            "code": "form_defer_unscheduled_maintenance",
+            "description": "The newly created MEL/CDL deferral record."
+         }
+      },
+      {
+         "name": "Resolve Aircraft Discrepancy (Unscheduled Maintenance/Squawk)",
+         "method": "POST",
+         "endpoint": "/aircraft/:tail_number/unscheduled-maintenance/:code/resolve",
+         "description": "Marks an aircraft discrepancy, unscheduled maintenance issue, or squawk as resolved and updates its status.",
+         "parameters": {
+            "id": {
+               "type": "string",
+               "required": true,
+               "description": "The ID of the maintenance issue or discrepancy to resolve."
+            },
+            "resolved_by": {
+               "type": "string",
+               "required": true,
+               "description": "The ID of the maintenance technician who resolved the issue."
+            }
+         },
+         "response": {
+            "code": "form_resolve_unscheduled_maintenance",
+            "description": "The updated discrepancy or maintenance record with resolution details."
+         }
+      }
+   ]
+}

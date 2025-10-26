@@ -1,0 +1,41 @@
+.main {
+   border: 1px solid #8a8e94;
+   padding: 8px;
+   width: 250px;
+   border-left-width: 3px;
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+}
+.main:hover {
+   background-color: #222222;
+}
+
+.subtle {
+   color: var(--subtle-color);
+}
+
+.title {
+   font-weight: bold;
+}
+
+.value {
+   margin-bottom: 4px;
+   display: block;
+}
+
+.active {
+   border-left-color: green;
+}
+.inactive {
+   border-left-color: rgb(255, 94, 0);
+}
+.overdue {
+   border-left-color: red;
+}
+.duesoon {
+   border-left-color: #b28620;
+}
+.unknown {
+   border-left-color: #8a8e94;
+}

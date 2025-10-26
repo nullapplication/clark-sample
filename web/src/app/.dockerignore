@@ -1,0 +1,5 @@
+terraform
+README.md
+.env.default
+.gitignore
+.prettier*

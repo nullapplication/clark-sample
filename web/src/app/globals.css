@@ -1,0 +1,254 @@
+@import url('colors.css');
+@import url('forms.css');
+@import url('table.css');
+@import url('buttons.css');
+
+html,
+body {
+   overflow-x: hidden;
+   margin: 0px;
+   padding: 0px;
+   margin: 0 auto;
+   font-size: 14px;
+   font-family: var(--font-roboto);
+   font-weight: 400;
+   height: 100%;
+}
+
+body {
+   color: var(--primary-text-color);
+   background: var(--primary-background-color);
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+   font-family: var(--font-inter);
+   font-weight: 500;
+   color: var(--subtle-color);
+   margin-bottom: 8px;
+}
+
+h1 {
+   font-size: 1.5rem;
+}
+
+h2 {
+   font-size: 1.25rem;
+}
+
+* {
+   box-sizing: border-box;
+}
+
+a {
+   color: inherit;
+}
+
+code,
+pre {
+   font-family: var(--font-mono);
+}
+
+.main {
+   width: 100%;
+   overflow-x: auto;
+}
+
+div[class*='date-picker'] button:focus,
+div[class*='MuiPickersPopper'] button:focus {
+   outline: unset;
+}
+
+a.button,
+a.link {
+   font-weight: 600;
+   text-decoration: none;
+}
+a:hover {
+   color: var(--mui-palette-primary-main);
+}
+a.link:hover {
+   text-decoration: underline;
+}
+a.primary {
+   color: var(--mui-palette-primary-main);
+}
+a .MuiSvgIcon-root {
+   margin-bottom: -2.5px;
+   padding: 1px;
+}
+
+.options.secondary button {
+   border-color: var(--mui-palette-secondary-main);
+   color: var(--mui-palette-secondary-main);
+   text-transform: none;
+}
+.options.secondary .MuiSvgIcon-root {
+   margin: -4px -2px -3px 6px;
+   color: var(--mui-palette-secondary-main);
+}
+.options.secondary button:active,
+.options.secondary button:focus {
+   outline-color: var(--mui-palette-primary-dark);
+   background-color: var(--mui-palette-secondary-dark);
+   border-color: var(--mui-palette-primary-dark);
+   color: var(--mui-palette-primary-dark);
+}
+.options.secondary button:disabled {
+   background-color: var(--mui-palette-secondary-light);
+   border-color: var(--mui-palette-primary-light);
+   color: var(--mui-palette-primary-light);
+}
+
+hr {
+   width: 100%;
+   border-top: 1px solid #ccc;
+}
+
+.container {
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+   height: 100%;
+}
+
+.content {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   justify-content: flex-start;
+   width: 100%;
+   min-width: 500px;
+   padding-left: 24px;
+   padding-right: 24px;
+   padding-top: 12px;
+}
+
+.sidebar {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   padding: 24px;
+   border-right: 1px solid #2f3336;
+}
+
+.sidepanel {
+   display: flex;
+   flex-direction: column;
+   gap: 1rem;
+   padding: 24px;
+   border-left: 1px solid #2f3336;
+   height: 100%;
+   min-width: 700px;
+   max-width: 700px;
+}
+
+.row {
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+   justify-content: flex-start;
+}
+
+.spaced-row {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   justify-content: space-between;
+   align-items: center;
+   gap: 1rem;
+   width: 100%;
+}
+
+.tabs {
+   list-style: none;
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   gap: 1rem;
+   margin: 0px;
+   padding: 0px;
+}
+
+.tabs li {
+   cursor: pointer;
+}
+
+.tabs li a {
+   text-decoration: none;
+}
+
+.tabs .active {
+   color: var(--highlight-color);
+   border-bottom: 2px solid var(--highlight-color);
+}
+
+.top-aligned {
+   align-self: flex-start;
+}
+
+.todo {
+   color: yellow;
+   display: none;
+}
+
+.error-button-container {
+   display: flex;
+   gap: 1rem;
+}
+
+.tabs {
+   color: var(--primary-text-color);
+}
+
+/* Webkit browsers: Chrome, Edge, Safari */
+::-webkit-scrollbar {
+   width: 12px;
+   height: 12px;
+}
+
+::-webkit-scrollbar-track {
+   background: #333; /* dark grey */
+}
+
+::-webkit-scrollbar-thumb {
+   background-color: #000; /* black */
+   border-radius: 6px;
+   border: 2px solid #333; /* creates padding around thumb */
+}
+
+/* Firefox */
+* {
+   /* scrollbar-width: thin; */
+   scrollbar-color: #000 #333; /* thumb track */
+}
+
+::-webkit-scrollbar-thumb:hover {
+   background-color: #111;
+}
+
+@media screen and (max-width: 1024px), print {
+   .content {
+      height: 100%;
+   }
+}
+
+@media print {
+   body > *:not(.container),
+   body > .container > *:not(.content),
+   .spaced-row .button-container {
+      display: none;
+   }
+   body {
+      background: #fff;
+   }
+   .content {
+      padding: 0;
+      box-shadow: none;
+   }
+}
